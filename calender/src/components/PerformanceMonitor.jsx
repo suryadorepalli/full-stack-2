@@ -1,0 +1,1 @@
+export default function PerformanceMonitor({visibleEventCount,filteredEventCount,totalEventCount}){return <div className="performance-monitor"><strong>Performance snapshot</strong><div><span>Total events</span><b>{totalEventCount}</b></div><div><span>Filtered</span><b>{filteredEventCount}</b></div><div><span>Visible this month</span><b>{visibleEventCount}</b></div></div>}

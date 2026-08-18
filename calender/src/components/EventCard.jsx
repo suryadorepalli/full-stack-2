@@ -1,0 +1,4 @@
+import React from 'react';
+import { GripVertical } from 'lucide-react';
+import { categoryColor,categoryLabel } from '../utils/calendarUtils.js';
+export default React.memo(function EventCard({event,onClick,onDragStart,onDragEnd,isDragging}){return <button type="button" className={`event-card ${isDragging?'event-card--dragging':''}`} style={{'--event-color':categoryColor(event.category)}} draggable onDragStart={e=>onDragStart(e,event)} onDragEnd={onDragEnd} onClick={e=>{e.stopPropagation();onClick(event)}} title={`${event.title} — ${event.time||'Any time'}`}><GripVertical size={13} className="event-card__grip"/><span className="event-card__body"><span className="event-card__time">{event.time||'Any time'}</span><span className="event-card__title">{event.title}</span><span className="event-card__category">{categoryLabel(event.category)}</span></span></button>});
