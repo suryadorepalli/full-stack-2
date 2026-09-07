@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { categoryColor } from '../utils/calendarUtils.js';
 import { recordComponentRender } from '../utils/renderStats.js';
+import { useOptimizationSettings } from '../context/OptimizationContext.jsx';
 
 /**
  * Flat, sorted list of events shown in the sidebar ("Upcoming events" /
@@ -10,7 +11,8 @@ import { recordComponentRender } from '../utils/renderStats.js';
  * changes — as long as that toggle is on.
  */
 function EventList({ events, onEventClick }) {
-  recordComponentRender('EventList');
+  const { settings } = useOptimizationSettings();
+  recordComponentRender('EventList', settings);
 
   if (events.length === 0) {
     return <p className="event-list__empty">No events match your search.</p>;

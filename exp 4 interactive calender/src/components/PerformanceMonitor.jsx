@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useOptimizationSettings } from '../context/OptimizationContext.jsx';
-import { getProfilerStats, getRenderCounts, resetProfilerStats } from '../utils/renderStats.js';
+import {
+  getOptimizationRenderCounts,
+  getProfilerStats,
+  getRenderCounts,
+  resetProfilerStats
+} from '../utils/renderStats.js';
 
 const TOGGLES = [
   {
@@ -37,7 +42,8 @@ function PerformanceMonitor({ visibleEventCount, filteredEventCount, totalEventC
   const [lastUpdate, setLastUpdate] = useState(() => new Date());
   const [liveStats, setLiveStats] = useState(() => ({
     profiler: getProfilerStats(),
-    renders: getRenderCounts()
+    renders: getRenderCounts(),
+    optimizationRenders: getOptimizationRenderCounts()
   }));
 
   useEffect(() => {
@@ -49,14 +55,22 @@ function PerformanceMonitor({ visibleEventCount, filteredEventCount, totalEventC
   // other components' render phases (which React warns against).
   useEffect(() => {
     const id = setInterval(() => {
-      setLiveStats({ profiler: getProfilerStats(), renders: getRenderCounts() });
+      setLiveStats({
+        profiler: getProfilerStats(),
+        renders: getRenderCounts(),
+        optimizationRenders: getOptimizationRenderCounts()
+      });
     }, 500);
     return () => clearInterval(id);
   }, []);
 
   const handleReset = () => {
     resetProfilerStats();
-    setLiveStats({ profiler: getProfilerStats(), renders: getRenderCounts() });
+    setLiveStats({
+      profiler: getProfilerStats(),
+      renders: getRenderCounts(),
+      optimizationRenders: getOptimizationRenderCounts()
+    });
   };
 
   const profilerIds = Object.keys(liveStats.profiler).sort();
@@ -93,6 +107,34 @@ function PerformanceMonitor({ visibleEventCount, filteredEventCount, totalEventC
         <dt>Updated</dt>
         <dd>{lastUpdate.toLocaleTimeString()}</dd>
       </dl>
+
+      <div className="performance-monitor__section">
+        <h4>Render count comparison</h4>
+        <table className="performance-monitor__table">
+          <thead>
+            <tr>
+              <th>Optimization</th>
+              <th>On</th>
+              <th>Off</th>
+              <th>Difference</th>
+            </tr>
+          </thead>
+          <tbody>
+            {TOGGLES.map(({ key, label }) => {
+              const counts = liveStats.optimizationRenders[key];
+              const difference = counts.off - counts.on;
+              return (
+                <tr key={key}>
+                  <td>{label}</td>
+                  <td>{counts.on}</td>
+                  <td>{counts.off}</td>
+                  <td>{difference > 0 ? `+${difference}` : difference}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
 
       <div className="performance-monitor__section">
         <h4>React Profiler timings</h4>

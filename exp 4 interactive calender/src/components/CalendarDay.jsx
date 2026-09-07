@@ -24,7 +24,6 @@ function CalendarDay({
   onDrop,
   draggingEventId
 }) {
-  recordComponentRender('CalendarDay');
   const [isDragOver, setIsDragOver] = useState(false);
 
   // "React.memo on cards" toggle: when on, use the memoized EventCard so
@@ -32,6 +31,7 @@ function CalendarDay({
   // unmemoized base component so every card re-renders whenever this day
   // cell re-renders.
   const { settings } = useOptimizationSettings();
+  recordComponentRender('CalendarDay', settings);
   const CardComponent = settings.memoCards ? MemoizedEventCard : EventCardBase;
 
   const handleDragOver = (e) => {

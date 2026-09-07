@@ -28,8 +28,8 @@ import { recordComponentRender } from '../utils/renderStats.js';
  *   on every parent render once it's switched off.
  */
 function Calendar({ events, onEventClick, onDayClick, onMoveEvent }) {
-  recordComponentRender('Calendar');
   const { settings } = useOptimizationSettings();
+  recordComponentRender('Calendar', settings);
   const useCallbackOn = settings.useCallbackHandlers;
 
   const [currentDate, setCurrentDate] = useState(() => new Date());
