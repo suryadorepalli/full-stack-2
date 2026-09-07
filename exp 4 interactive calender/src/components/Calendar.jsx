@@ -9,6 +9,7 @@ import {
 } from '../utils/calendarUtils.js';
 import { useOptimizationSettings } from '../context/OptimizationContext.jsx';
 import { useToggleableCallback } from '../hooks/useToggleableCallback.js';
+import { recordComponentRender } from '../utils/renderStats.js';
 
 /**
  * Top-level calendar grid. Owns which month is being viewed and which event
@@ -27,6 +28,7 @@ import { useToggleableCallback } from '../hooks/useToggleableCallback.js';
  *   on every parent render once it's switched off.
  */
 function Calendar({ events, onEventClick, onDayClick, onMoveEvent }) {
+  recordComponentRender('Calendar');
   const { settings } = useOptimizationSettings();
   const useCallbackOn = settings.useCallbackHandlers;
 

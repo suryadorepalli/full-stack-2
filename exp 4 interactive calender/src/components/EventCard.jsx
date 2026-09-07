@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { categoryColor } from '../utils/calendarUtils.js';
+import { recordComponentRender } from '../utils/renderStats.js';
 
 /**
  * EventCard is rendered once per event, per visible day — potentially dozens
@@ -11,6 +12,7 @@ import { categoryColor } from '../utils/calendarUtils.js';
  * WITHOUT it (`EventCardBase`, used when the toggle is off) at runtime.
  */
 function EventCardBase({ event, onClick, onDragStart, onDragEnd, isDragging }) {
+  recordComponentRender('EventCard');
 
   // Deliberately unthrottled: this is the console log the experiment's
   // "Re-render Analysis" section asks for, so unnecessary re-renders can be

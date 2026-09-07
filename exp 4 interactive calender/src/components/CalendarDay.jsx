@@ -1,6 +1,7 @@
 import React, { memo, useState } from 'react';
 import { MemoizedEventCard, EventCardBase } from './EventCard.jsx';
 import { useOptimizationSettings } from '../context/OptimizationContext.jsx';
+import { recordComponentRender } from '../utils/renderStats.js';
 
 /**
  * One grid cell in the calendar. Wrapped in React.memo: with 42 cells
@@ -23,6 +24,7 @@ function CalendarDay({
   onDrop,
   draggingEventId
 }) {
+  recordComponentRender('CalendarDay');
   const [isDragOver, setIsDragOver] = useState(false);
 
   // "React.memo on cards" toggle: when on, use the memoized EventCard so

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useOptimizationSettings } from '../context/OptimizationContext.jsx';
-import { getProfilerStats, resetProfilerStats } from '../utils/renderStats.js';
+import { getProfilerStats, getRenderCounts, resetProfilerStats } from '../utils/renderStats.js';
 
 const TOGGLES = [
   {
@@ -36,7 +36,8 @@ function PerformanceMonitor({ visibleEventCount, filteredEventCount, totalEventC
   const { settings, toggle } = useOptimizationSettings();
   const [lastUpdate, setLastUpdate] = useState(() => new Date());
   const [liveStats, setLiveStats] = useState(() => ({
-    profiler: getProfilerStats()
+    profiler: getProfilerStats(),
+    renders: getRenderCounts()
   }));
 
   useEffect(() => {
@@ -48,17 +49,18 @@ function PerformanceMonitor({ visibleEventCount, filteredEventCount, totalEventC
   // other components' render phases (which React warns against).
   useEffect(() => {
     const id = setInterval(() => {
-      setLiveStats({ profiler: getProfilerStats() });
+      setLiveStats({ profiler: getProfilerStats(), renders: getRenderCounts() });
     }, 500);
     return () => clearInterval(id);
   }, []);
 
   const handleReset = () => {
     resetProfilerStats();
-    setLiveStats({ profiler: getProfilerStats() });
+    setLiveStats({ profiler: getProfilerStats(), renders: getRenderCounts() });
   };
 
   const profilerIds = Object.keys(liveStats.profiler).sort();
+  const renderCount = Object.values(liveStats.renders).reduce((total, count) => total + count, 0);
 
   return (
     <div className="performance-monitor">
@@ -86,6 +88,8 @@ function PerformanceMonitor({ visibleEventCount, filteredEventCount, totalEventC
         <dd>{filteredEventCount}</dd>
         <dt>This month</dt>
         <dd>{visibleEventCount}</dd>
+        <dt>Tracked renders</dt>
+        <dd>{renderCount}</dd>
         <dt>Updated</dt>
         <dd>{lastUpdate.toLocaleTimeString()}</dd>
       </dl>
@@ -120,6 +124,10 @@ function PerformanceMonitor({ visibleEventCount, filteredEventCount, totalEventC
           </table>
         )}
       </div>
+
+      <button type="button" className="btn btn--ghost btn--full" onClick={handleReset}>
+        Reset render measurements
+      </button>
     </div>
   );
 }
