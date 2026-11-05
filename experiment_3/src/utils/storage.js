@@ -1,0 +1,15 @@
+const ACCESS_TOKEN = "accessToken";
+const REFRESH_TOKEN = "refreshToken";
+const USER = "user";
+export const saveAccessToken = (token) => localStorage.setItem(ACCESS_TOKEN, token);
+export const getAccessToken = () => localStorage.getItem(ACCESS_TOKEN);
+export const removeAccessToken = () => localStorage.removeItem(ACCESS_TOKEN);
+export const saveRefreshToken = (token) => localStorage.setItem(REFRESH_TOKEN, token);
+export const getRefreshToken = () => localStorage.getItem(REFRESH_TOKEN);
+export const removeRefreshToken = () => localStorage.removeItem(REFRESH_TOKEN);
+export const saveUser = (user) => localStorage.setItem(USER, JSON.stringify(user));
+export const getUser = () => { const user = localStorage.getItem(USER); return user ? JSON.parse(user) : null; };
+export const removeUser = () => localStorage.removeItem(USER);
+export const clearStorage = () => { localStorage.removeItem(ACCESS_TOKEN); localStorage.removeItem(REFRESH_TOKEN); localStorage.removeItem(USER); };
+export const isLoggedIn = () => !!getAccessToken();
+export default { saveAccessToken, getAccessToken, removeAccessToken, saveRefreshToken, getRefreshToken, removeRefreshToken, saveUser, getUser, removeUser, clearStorage, isLoggedIn };
